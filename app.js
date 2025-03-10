@@ -1,76 +1,93 @@
-
-
-// 'http://www.omdbapi.com/?i=tt3896198&apikey=b3770ca8'
-
-async function fetchData(url) {
-  try {
-    let response = await fetch(url);
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    let data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-}
-
-async function moviesSearch(value) {
-  if (!value.trim()) return;
-
-  let search = await fetchData(`http://www.omdbapi.com/?i=tt3896198&apikey=b3770ca8`);
-  if (!search || !search.Search) {
-    console.log("No movies found!");
-    return;
-  }
-
-  const array = search.Search.slice(0, 6);
-  const movies = document.querySelector(".movies_list");
-
-  const moviesHTML = array
-    .map(
-      (movie) => `
-      <div class="movie">
-        <figure class="movie_img--wrapper">
-          <img class="movie_img" src="${movie.Poster}" alt="">
-          <h3 class="movie_info--title">${movie.Title}</h3>
-        </figure>
-        <h4 class="movie_title">${movie.Title}</h4>
-      </div>`
-    )
-    .join("");
-
-  movies.innerHTML = moviesHTML;
-}
-
-function searchActive() {
-  document.querySelector(".nav_input").focus();
-}
-
-function searchResult(value) {
-  const searchBar = document.querySelector(".movies_top");
-  searchBar.innerHTML = `
-    <h2 class="movies_top--title">Search results for:</h2>
-    <h2 class="movie_search--result">"${value}"</h2>
-  `;
+function searchActive(value) {
+  const input = document.querySelector(".nav_input");
+  input.focus();
 }
 
 async function searchBarEnter(event) {
-  if (event.keyCode !== 13) return;
+  let value = document.querySelector(".nav_input").value;
+  const input = document.querySelector(".nav_input");
 
-  let value = document.querySelector(".nav_input").value.trim();
-  if (!value) return;
-
-  searchResult(value);
-  await moviesSearch(value);
+  if (event.keyCode == 13) {
+    if (input === document.activeElement) {
+      searchResult(value);
+      await moviesSearch(value)
+      return setTimeout(() =>loadingDone(), 1000)
+    }
+    value = document.querySelector(".movie_input").value;
+    searchResult(value);
+    await moviesSearch(value);
+    setTimeout(() =>loadingDone(), 1000)
+  }
 }
 
 async function searchOnClick() {
-  let value = document.querySelector(".movie_input").value.trim();
-  if (!value) return;
+  const value = document.querySelector(".movie_input").value;
 
   searchResult(value);
-  await moviesSearch(value);
+  await moviesSearch(value)
+  setTimeout(() =>loadingDone(), 1000)
 }
 
-console.log(moviesSearch('The Avenger'));
+function searchResult(value) {
+  const searchBar = document.querySelector(".movie_top");
+
+  if (!searchBar) {
+    console.error("Error: .movie_top element not found!");
+    return;
+  }
+
+  const searchBarHTML = `
+    <h2 class="movies_top--title">Search results for:</h2>
+    <h2 class="movie_search--result">"${value}"</h2>
+  `;
+
+  searchBar.innerHTML = searchBarHTML;
+  searchBar.classList.add("movie_search--result-visible");
+}
+
+async function moviesSearch(value) {
+
+  const response = await fetch(
+    `https://www.omdbapi.com/?s=${value}&apikey=b3770ca8`
+
+  );
+
+  const searchResults = await response.json();
+
+  const array = await searchResults.Search.slice(0, 6);
+
+  const movies = document.querySelector(".movies_list");
+
+  const moviesHTML = array
+  .map(
+    (movie) => 
+`<div class="movie">
+<figure class="movie_img--wrapper">
+  <img class="movie_img" src="${movie.Poster}" alt="">
+  <h3 class="movie_info--title">${movie.Title}</h3>
+
+
+</figure>
+<h4 class="movie_title">${movie.Title}</h4>`
+  )
+  .join("");
+
+   movies.innerHTML =
+      `<i class="fa-solid fa-spinner movies_list--loading movies_list--loading"></i>
+` + moviesHTML
+
+console.log('pending')
+  }
+
+
+function loadingDone() {
+  const targetMovie = document.querySelectorAll('.movie');
+
+  const targetLoading = document.querySelector(".movies_list--loading");
+
+  targetLoading.classList.remove("movies_list--loading");
+  targetMovie.forEach((movie) => movie.classList.remove("movie_list--loading") )
+
+
+  console.log('removed')
+}
