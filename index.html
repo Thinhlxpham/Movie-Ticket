@@ -6,12 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Movie Ticket</title>
   <link rel="stylesheet" href="style.css">
-  <script src="app.js"></script>
+  <script src="app.js" defer></script>
   <script src="https://kit.fontawesome.com/478bd2c4ff.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
-  <section id="lading">
+  <section id="landing">
     <div class="movie_background">
       <figure class="movie_background--wrapper">
         <div class="nav_content">
@@ -24,8 +24,8 @@
           </div>
           <div class="nav_right">
             <div class="nav_input--wrapper">
-              <input type="text" class="nav_input" placeholder="Find a movie" onkeyup="searchBarEvent()" />
-              <i class="fa-solid fa-magnifying-glass nav_search"></i>
+              <input type="text" class="nav_input" placeholder="Find a movie" onkeyup="searchBarEnter(event)" />
+              <i class="fa-solid fa-magnifying-glass nav_search" onclick="searchActive()"></i>
             </div>
             <i class="fa-solid fa-gear nav_settings"></i>
           </div>
@@ -42,8 +42,8 @@
           </h3>
           <div class="movie_background--search">
             <div class="movie_input--wrapper form_submit">
-              <input type="text" class="movie_input" placeholder="Find a movie" onkeyup="searchBarEvent()" />
-              <i class="fa-solid fa-magnifying-glass movie_search"></i>
+              <input type="text" class="movie_input" placeholder="Find a movie" onkeyup="searchBarEnter(event)" />
+              <i class="fa-solid fa-magnifying-glass movie_search" onclick="searchOnClick()"></i>
             </div>
           </div>
         </div>
@@ -59,7 +59,7 @@
             <h2 class="movies_top--tittle">
               Search results for:
             </h2>
-            <h2 class="movie_search--result">""</h2>
+            <h2 class="movie_search--result" onchange="searchResult(value)">""</h2>
           </div>
           <div class="movies_list">
             <i class="fa-solid fa-spinner movie_list--loading"></i>
@@ -67,6 +67,7 @@
               <figure class="movie_img--wrapper">
                 <img class="movie_img" src="asset/postertest.jpg" alt="">
                 <h3 class="movie_info--title">Guardians of the Galaxy Vol .2</h3>
+
 
               </figure>
               <h4 class="movie_title">Guardians of the Galaxy Vol. 2</h4>
