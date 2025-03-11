@@ -62,13 +62,13 @@ async function moviesSearch(value) {
   .map(
     (movie) => 
 `<div class="movie">
-<figure class="movie_img--wrapper">
-  <img class="movie_img" src="${movie.Poster}" alt="">
-  <h3 class="movie_info--title">${movie.Title}</h3>
+              <figure class="movie_img--wrapper">
+                <img class="movie_img" src="${movie.Poster}" alt="">
+                <h3 class="movie_info--title">${movie.Title}</h3>
 
-
-</figure>
-<h4 class="movie_title">${movie.Title}</h4>`
+              </figure>
+              <h4 class="movie_title">${movie.Title}</h4>
+            </div>`
   )
   .join("");
 
